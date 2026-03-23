@@ -12,12 +12,7 @@ import java.util.Optional;
 
 
 
-// Day 4 – CRUD Operations; 
-//         Create POST /users; 
-//         Create GET /users; 
-//         Create GET /users/{id}; 
-//         Create DELETE /users; 
-//         Test all endpoints with Postman
+
 
 
 // Day 5 – DTOs + Validation; 
