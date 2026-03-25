@@ -8,7 +8,9 @@ import com.example.demo.user.dto.UserResponseDTO;
 import java.util.List;
 import java.util.Optional;
 import java.util.ArrayList;  
-
+import com.example.demo.common.exception.ResourceNotFoundException;
+import com.example.demo.common.exception.ErrorCode;
+import com.example.demo.common.exception.DuplicateResourceException;
 
 @Service
 public class UserService {
@@ -31,39 +33,39 @@ public class UserService {
             return dtoList;
     }
 
-    // GET USER BY ID
-    public Optional<UserResponseDTO> getUserById(Long id) {
-        Optional<UserEntity> userEntityOpt = userRepository.findById(id);
-
-        if (userEntityOpt.isPresent()) {
-            UserResponseDTO dto = toResponse(userEntityOpt.get());
-            return Optional.of(dto);
-        } else {
-            return Optional.empty();
-        }
-    }
-
-
-    // CREATE USER 
+    // CREATE USER -- new
     public UserResponseDTO createUser(CreateUserDTO dto) {
-        UserEntity user = toEntity(dto);
-        UserEntity saved = userRepository.save(user);
+        if (userRepository.existsByEmail(dto.getEmail())) {
+            throw new DuplicateResourceException("Email already exists: " + dto.getEmail());
+        }
+        if (userRepository.existsByUsername(dto.getUsername())) {
+            throw new DuplicateResourceException("Username already exists: " + dto.getUsername());
+        }
+        UserEntity saved = userRepository.save(toEntity(dto));
         return toResponse(saved);
     }
+    // GET USER BY ID  -- new 
+    public UserResponseDTO getUserById(Long id) {
+        return userRepository.findById(id)
+                .map(this::toResponse)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        ErrorCode.USER_NOT_FOUND,
+                        "User",
+                        id
+                ));
+    } 
 
+    // DELETE USER -- new
+    public UserResponseDTO  deleteUser(Long id) {
+        return userRepository.findById(id)
+                .map(this::toResponse)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                    ErrorCode.USER_NOT_FOUND,
+                    "User",
+                    id
+                ));
+    } 
 
-    // DELETE USER
-    public Optional<UserResponseDTO>  deleteUser(Long id) {
-        Optional<UserEntity> userEntityOpt = userRepository.findById(id);
-
-        if (userEntityOpt.isPresent()) {
-            UserResponseDTO dto = toResponse(userEntityOpt.get());
-            userRepository.deleteById(id);
-            return Optional.of(dto);
-        } else {
-            return Optional.empty();
-        }
-    }
 
     // ==================================================   
     //  DTO MAPPER

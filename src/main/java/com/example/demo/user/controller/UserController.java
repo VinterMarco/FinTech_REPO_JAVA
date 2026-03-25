@@ -13,13 +13,6 @@ import java.util.Optional;
 
 
 
-//     Day 6 Exception Handling; 
-//         - Create global exception handler; 
-//         - Add custom exceptions (UserNotFound); 
-//         - Return proper HTTP codes; 
-//         - Test error responses
-
-
 
 @RestController
 @RequestMapping("/users")
@@ -45,21 +38,16 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-
-    // GET USER BY ID 
+    // GET USER BY ID  -- new 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
-        return userService.getUserById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public UserResponseDTO getUserById(@PathVariable Long id) {
+        return userService.getUserById(id);
     }
 
-    // DELETE USER BY ID 
+    // DELETE USER BY ID -- new
     @DeleteMapping("/{id}")
-    public ResponseEntity<UserResponseDTO>  deleteUser(@PathVariable Long id) {
-        return userService.deleteUser(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public UserResponseDTO deleteUser(@PathVariable Long id) {
+        return userService.deleteUser(id);
     }
 
     
