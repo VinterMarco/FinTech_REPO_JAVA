@@ -2,16 +2,25 @@ package com.example.demo.user.controller;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.example.demo.user.entity.UserEntity;
 import com.example.demo.user.service.UserService;
-import org.springframework.http.ResponseEntity;       
 import com.example.demo.user.dto.CreateUserDTO;
 import com.example.demo.user.dto.UserResponseDTO;
+import com.example.demo.user.dto.DeleteUserDTO;
+import com.example.demo.user.dto.UpdateUserDTO;
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
+// Day 7 – Refactor + Review;  ()
+// Test all endpoints; 
+// Document code
 
+// Day 8 – Spring Security Setup; 
+// Add Spring Security dependency; 
+// Configure security; 
+// Disable default login page; 
+// Test protected endpoints
+
+// TODAY BEFORE TRIP AFTER GYM
 
 
 @RestController
@@ -31,6 +40,7 @@ public class UserController {
     public UserResponseDTO createUser(@RequestBody @Valid CreateUserDTO dto) {
         return userService.createUser(dto);
     }
+    
 
     // GET ALL USERS
     @GetMapping
@@ -38,17 +48,28 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    // GET USER BY ID  -- new 
+    // GET ALL USERS - PUBLIC
+    @GetMapping("/public")
+    public List<UserResponseDTO> getAllUsersPUBLIC() {
+        return userService.getAllUsers();
+    }    
+
+    // GET USER BY ID   
     @GetMapping("/{id}")
     public UserResponseDTO getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
     }
 
-    // DELETE USER BY ID -- new
+    // DELETE USER BY ID 
     @DeleteMapping("/{id}")
-    public UserResponseDTO deleteUser(@PathVariable Long id) {
+    public DeleteUserDTO deleteUser(@PathVariable Long id) {
         return userService.deleteUser(id);
     }
 
+    // UPFATE BY ID 
+    @PatchMapping("/{id}")
+    public UserResponseDTO updateUser(@PathVariable Long id, @RequestBody @Valid UpdateUserDTO dto) {
+        return userService.updateUser(id, dto);
+    }
     
 }

@@ -1,53 +1,73 @@
 package com.example.demo.user.entity;
 
-
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import java.time.LocalDateTime;
 
+/**
+ * JPA entity representing a user in the system.
+ * Maps to the "users" table in the database.
+ *
+ * Lombok annotations used:
+ * - @Getter / @Setter instead of @Data to avoid JPA pitfalls
+ *   with equals() and hashCode() on lazy-loaded collections.
+ * - @NoArgsConstructor required by JPA spec (proxy instantiation).
+ * - @AllArgsConstructor for convenience when building instances manually.
+ */
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "users")
 public class UserEntity {
 
+    /**
+     * Primary key, auto-incremented by the database.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * Unique username for the user.
+     * Cannot be null or duplicated across users.
+     */
     @Column(nullable = false, unique = true)
     private String username;
 
+    /**
+     * Hashed password for the user.
+     * Should never be stored or returned as plain text.
+     */
     @Column(nullable = false)
     private String password;
 
+    /**
+     * Unique email address for the user.
+     * Cannot be null or duplicated across users.
+     */
     @Column(nullable = false, unique = true)
     private String email;
 
+    /**
+     * Timestamp of when the user was created.
+     * Set automatically via @PrePersist — never updated after insert.
+     * updatable = false ensures JPA never modifies this column after creation.
+     */
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
-    // Rulează automat înainte de INSERT
+    /**
+     * Lifecycle callback executed automatically before the entity is persisted.
+     * Sets createdAt to the current timestamp at insert time.
+     * Never called manually.
+     */
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
-
-    public UserEntity() {}
-
-    public UserEntity(String username, String password, String email) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        // createdAt se setează automat prin @PrePersist, nu aici
-    }
-
-    // Getters & Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }

@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import java.util.Map;
 
 
 // intrebare, aici puntem toate exceptiile ? daca am 2o aici le 
@@ -29,12 +30,25 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
+
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleValidation(MethodArgumentNotValidException ex) {
+        // return ResponseEntity.badRequest()
+        //         .body(ValidationErrorMapper.toMap(ex));
 
-        return ResponseEntity.badRequest()
-                .body(ValidationErrorMapper.toMap(ex));
+        // easier to read version
+        Map<String, String> errors = ValidationErrorMapper.toMap(ex);
+        System.out.println(errors);
+        System.out.println(new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST));
+
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);            
+                
     }
+
+
+
+
 
     @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<ErrorResponse> handleDuplicate(DuplicateResourceException ex) {

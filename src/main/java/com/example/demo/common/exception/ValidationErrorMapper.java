@@ -7,7 +7,10 @@ import java.util.Map;
 
 public class ValidationErrorMapper {
 
-    public static Map<String, String> toMap(MethodArgumentNotValidException ex) {
+   /**
+    * primes
+     */
+        public static Map<String, String> toMap(MethodArgumentNotValidException ex) {
 
         Map<String, String> errors = new HashMap<>();
 
