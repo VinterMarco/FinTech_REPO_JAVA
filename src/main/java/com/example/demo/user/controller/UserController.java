@@ -47,12 +47,7 @@ public class UserController {
     public List<UserResponseDTO> getAllUsers() {
         return userService.getAllUsers();
     }
-
-    // GET ALL USERS - PUBLIC
-    @GetMapping("/public")
-    public List<UserResponseDTO> getAllUsersPUBLIC() {
-        return userService.getAllUsers();
-    }    
+  
 
     // GET USER BY ID   
     @GetMapping("/{id}")
