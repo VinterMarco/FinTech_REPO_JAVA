@@ -8,9 +8,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.Map;
 
 
-// intrebare, aici puntem toate exceptiile ? daca am 2o aici le 
-// pun pe toate, iar daca nu le pun aici pe toate,
-// unde si cum sa le pun ??
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -34,14 +31,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleValidation(MethodArgumentNotValidException ex) {
-        // return ResponseEntity.badRequest()
-        //         .body(ValidationErrorMapper.toMap(ex));
-
-        // easier to read version
         Map<String, String> errors = ValidationErrorMapper.toMap(ex);
-        System.out.println(errors);
-        System.out.println(new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST));
-
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);            
                 
     }
@@ -61,6 +51,20 @@ public class GlobalExceptionHandler {
                 ex.getErrorCode().getCode()     
         );
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleInvalid(InvalidCredentialsException ex) {
+        ErrorResponse error = new ErrorResponse(
+                System.currentTimeMillis(),
+                HttpStatus.UNAUTHORIZED.value(),
+                "UNAUTHORIZED",
+                ex.getMessage(),
+                ex.getErrorCode().name(),
+                ex.getErrorCode().getCode()     
+        );
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(Exception.class)

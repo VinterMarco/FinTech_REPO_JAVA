@@ -1,17 +1,15 @@
 package com.example.demo.common.exception;
 
-public class DuplicateResourceException extends RuntimeException {
+public class InvalidCredentialsException extends RuntimeException {
 
     private final ErrorCode errorCode;
 
-    public DuplicateResourceException(String message) {
+    public InvalidCredentialsException(String message) {
         super(message);
         this.errorCode = ErrorCode.USER_INVALID;
     }
 
-
-    // new constructor - allows custom ErrorCode
-    public DuplicateResourceException(String message, ErrorCode errorCode) {
+    public InvalidCredentialsException(String message, ErrorCode errorCode) {
         super(message);
         this.errorCode = errorCode;
     }
