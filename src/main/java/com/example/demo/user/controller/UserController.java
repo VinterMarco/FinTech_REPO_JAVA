@@ -10,18 +10,11 @@ import com.example.demo.user.dto.UpdateUserDTO;
 import jakarta.validation.Valid;
 import java.util.List;
 
-// Day 7 – Refactor + Review;  ()
-// Test all endpoints; 
-// Document code
-
-// Day 8 – Spring Security Setup; 
-// Add Spring Security dependency; 
-// Configure security; 
-// Disable default login page; 
+//Day 11 – JWT Validation; 
+// Create JWT filter; 
+// Validate token for requests; 
+// Extract user info from token; 
 // Test protected endpoints
-
-// TODAY BEFORE TRIP AFTER GYM
-
 
 @RestController
 @RequestMapping("/users")

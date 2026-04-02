@@ -11,17 +11,18 @@ import com.example.demo.common.exception.ResourceNotFoundException;
 import com.example.demo.common.exception.ErrorCode;
 import com.example.demo.common.exception.DuplicateResourceException;
 import com.example.demo.common.exception.InvalidCredentialsException;
-
+import com.example.demo.common.security.JwtService;
 
 @Service
 public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    private final JwtService jwtService;
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
     
 
@@ -48,16 +49,19 @@ public class AuthService {
 
     // LOGIN USER 
     public MessageResponseDTO login(LoginRequestDTO dto) {
+
         UserEntity  user = userRepository.findByEmail(dto.getEmail())
             .orElseThrow(() ->  new InvalidCredentialsException(
                 "Username or Password are incorect", 
                 ErrorCode.INVALID_CREDENTIALS));
+
         if(!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
             throw new InvalidCredentialsException(
                 "Username or Password are incorect", 
                 ErrorCode.INVALID_CREDENTIALS);
         }    
-        return new MessageResponseDTO("Login successful");
+
+        return new MessageResponseDTO("Login successful", jwtService.generateToken(user.getEmail()));
     }
 
 
